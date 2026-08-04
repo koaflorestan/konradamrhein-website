@@ -73,17 +73,49 @@
             color: #ffffff;
         }
 
-       .profile-img {
-            width: 140px; /* Breite zurück auf normal */
-            height: 140px; /* Höhe identisch zur Breite */
+       .profile-img-container {
+            position: relative;
+            width: 320px;
+            height: 180px;
+            margin: 0 auto 24px auto;
+            display: block;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 50%; /* SAUBERER RUNDER AUSSCHNITT */
+            /* Sorgt dafür, dass dein Gesicht links im runden Bereich sitzt */
+            object-position: left center; 
             
-            /* LÖSCHE ODER KOMMENTIERE DIE UNTFÖRMIGE SCHABLONE: */
-            /* clip-path: polygon(...); <- DAS MUSS WEG */
-            
-            margin-bottom: 24px;
-            display: inline-block;
+            /* Exakte Form deiner Skizze */
+            clip-path: polygon(
+                45% 4%, 25% 15%, 12% 40%, 15% 70%, 30% 85%, 48% 82%, 
+                58% 65%, 68% 55%, 82% 52%, 93% 54%, 97% 65%, 98% 78%, 
+                91% 87%, 80% 88%, 68% 85%, 58% 88%, 51% 94%, 
+                42% 98%, 28% 98%, 15% 94%, 8% 82%, 5% 65%, 
+                4% 45%, 8% 25%, 15% 12%, 30% 6%
+            );
+        }
+
+        /* Schwarzer Rahmen um die Form */
+        .profile-img-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            clip-path: polygon(
+                45% 4%, 25% 15%, 12% 40%, 15% 70%, 30% 85%, 48% 82%, 
+                58% 65%, 68% 55%, 82% 52%, 93% 54%, 97% 65%, 98% 78%, 
+                91% 87%, 80% 88%, 68% 85%, 58% 88%, 51% 94%, 
+                42% 98%, 28% 98%, 15% 94%, 8% 82%, 5% 65%, 
+                4% 45%, 8% 25%, 15% 12%, 30% 6%
+            );
+            z-index: -1;
+            transform: scale(1.03);
         }
 
         h1 {
@@ -143,7 +175,9 @@
     <!-- Visitenkarte -->
     <div class="card" id="kontakt">
         <!-- Dein Profilfoto -->
-        <img src="profilbild.jpg" alt="Konrad Amrhein" class="profile-img">
+        <div class="profile-img-container">
+    <img src="profilbild.jpg" alt="Konrad Amrhein" class="profile-img">
+</div>
 
         <h1>Konrad Amrhein</h1>
         <p class="subtitle">Regisseur / Moderator / Sprecher</p>
