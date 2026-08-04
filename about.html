@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Über mich – Konrad Amrhein</title>
+    <meta name="description" content="Über Konrad Amrhein – Regisseur, Moderator und Sprecher." />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false" role="button" tabindex="0">☰</div>
+    <nav class="overlay-menu" id="sideMenu" aria-label="Hauptnavigation">
+        <div class="menu-items">
+            <a href="index.html" onclick="toggleMenu()">Start</a>
+            <a href="about.html" onclick="toggleMenu()">Über mich</a>
+            <a href="projects.html" onclick="toggleMenu()">Projekte</a>
+            <a href="contact.html" onclick="toggleMenu()">Kontakt</a>
+        </div>
+    </nav>
+
+    <main id="main">
+        <img src="profilbild.jpg" alt="Konrad Amrhein" class="profile-img">
+        <h1>Über mich</h1>
+        <p>Ich bin Konrad Amrhein, Regisseur, Moderator und Sprecher. Hier kannst du eine kurze Biografie, Ausbildung und Schwerpunkte angeben.</p>
+        <p>Weitere Details zu meiner Arbeit und meinem Werdegang folgen hier.</p>
+    </main>
+
+    <script>
+        const menuBtn = document.querySelector('.menu-icon');
+        const sideMenu = document.getElementById('sideMenu');
+        function toggleMenu() {
+            const open = sideMenu.classList.toggle('open');
+            menuBtn.setAttribute('aria-expanded', open);
+            if (open) sideMenu.querySelector('a').focus(); else menuBtn.focus();
+        }
+        menuBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); } });
+    </script>
+</body>
+</html>

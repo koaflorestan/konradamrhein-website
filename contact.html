@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt – Konrad Amrhein</title>
+    <meta name="description" content="Kontaktinformationen für Konrad Amrhein." />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false" role="button" tabindex="0">☰</div>
+    <nav class="overlay-menu" id="sideMenu" aria-label="Hauptnavigation">
+        <div class="menu-items">
+            <a href="index.html" onclick="toggleMenu()">Start</a>
+            <a href="about.html" onclick="toggleMenu()">Über mich</a>
+            <a href="projects.html" onclick="toggleMenu()">Projekte</a>
+            <a href="contact.html" onclick="toggleMenu()">Kontakt</a>
+        </div>
+    </nav>
+
+    <main id="main">
+        <h1>Kontakt</h1>
+        <p>Schreib mir eine Nachricht oder ruf an.</p>
+        <p>Email: <a href="mailto:kontakt@konradamrhein.de">kontakt@konradamrhein.de</a></p>
+        <p>Tel.: <a href="tel:+491726319068">+49 172 6319068</a></p>
+
+        <form action="#" method="post" aria-label="Kontaktformular">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email">
+            <label for="message">Nachricht</label>
+            <textarea id="message" name="message" rows="6"></textarea>
+            <button type="submit">Absenden</button>
+        </form>
+    </main>
+
+    <script>
+        const menuBtn = document.querySelector('.menu-icon');
+        const sideMenu = document.getElementById('sideMenu');
+        function toggleMenu() {
+            const open = sideMenu.classList.toggle('open');
+            menuBtn.setAttribute('aria-expanded', open);
+            if (open) sideMenu.querySelector('a').focus(); else menuBtn.focus();
+        }
+        menuBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); } });
+    </script>
+</body>
+</html>

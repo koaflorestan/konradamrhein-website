@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projekte – Konrad Amrhein</title>
+    <meta name="description" content="Auswahl an Projekten von Konrad Amrhein." />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false" role="button" tabindex="0">☰</div>
+    <nav class="overlay-menu" id="sideMenu" aria-label="Hauptnavigation">
+        <div class="menu-items">
+            <a href="index.html" onclick="toggleMenu()">Start</a>
+            <a href="about.html" onclick="toggleMenu()">Über mich</a>
+            <a href="projects.html" onclick="toggleMenu()">Projekte</a>
+            <a href="contact.html" onclick="toggleMenu()">Kontakt</a>
+        </div>
+    </nav>
+
+    <main id="main">
+        <h1>Projekte</h1>
+        <div class="project">
+            <h2>Projekt A</h2>
+            <p>Kurzbeschreibung des Projekts A.</p>
+        </div>
+        <div class="project">
+            <h2>Projekt B</h2>
+            <p>Kurzbeschreibung des Projekts B.</p>
+        </div>
+    </main>
+
+    <script>
+        const menuBtn = document.querySelector('.menu-icon');
+        const sideMenu = document.getElementById('sideMenu');
+        function toggleMenu() {
+            const open = sideMenu.classList.toggle('open');
+            menuBtn.setAttribute('aria-expanded', open);
+            if (open) sideMenu.querySelector('a').focus(); else menuBtn.focus();
+        }
+        menuBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); } });
+    </script>
+</body>
+</html>
