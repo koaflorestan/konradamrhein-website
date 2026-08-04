@@ -74,12 +74,22 @@
         }
 
         .profile-img {
-            width: 140px;
-            height: 140px;
+            width: 320px; /* Breite etwas größer für die Form */
+            height: 180px; /* Höhe der Form angepasst */
             object-fit: cover;
-            border-radius: 50%; /* Rundes Foto */
-            border: 2px solid #000000;
+            
+            /* Unförmiger Rahmen / Schablone (clip-path) */
+            clip-path: polygon(
+                45% 4%, 25% 15%, 12% 40%, 15% 70%, 30% 85%, 48% 82%, 
+                58% 65%, 68% 55%, 82% 52%, 93% 54%, 97% 65%, 98% 78%, 
+                91% 87%, 80% 88%, 68% 85%, 58% 88%, 51% 94%, 
+                42% 98%, 28% 98%, 15% 94%, 8% 82%, 5% 65%, 
+                4% 45%, 8% 25%, 15% 12%, 30% 6%
+            );
+            
+            background-color: #000000; /* Falls das Bild nicht lädt, schwarze Form */
             margin-bottom: 24px;
+            display: inline-block;
         }
 
         h1 {
