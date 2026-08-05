@@ -51,13 +51,7 @@
         });
 
         // Startseiten-Slideshow ohne Profilbild
-        const homeImages = [
-            'images/regentrude.jpg',
-            'images/feldfuge.jpg',
-            'images/kommentartheater.jpg',
-            'images/laundrywrack.jpg',
-            'images/viani-forte.jpg'
-        ];
+        let homeImages = [];
         let currentSlide = 0;
         const bodyEl = document.body;
         const slideA = document.querySelector('.slide-a');
@@ -67,28 +61,69 @@
         let activeSlide = slideA;
         let inactiveSlide = slideB;
 
+        function preloadImage(src) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+                img.src = src;
+            });
+        }
+
         function setSlideBackground(slide, index) {
             slide.style.backgroundImage = `url('${homeImages[index]}')`;
+        }
+
+        function scheduleNext() {
+            setTimeout(() => {
+                nextSlide();
+            }, visibleDuration);
         }
 
         function nextSlide() {
             const nextIndex = (currentSlide + 1) % homeImages.length;
             setSlideBackground(inactiveSlide, nextIndex);
-            inactiveSlide.classList.add('active');
+            requestAnimationFrame(() => {
+                inactiveSlide.classList.add('active');
+            });
 
             setTimeout(() => {
                 activeSlide.classList.remove('active');
                 [activeSlide, inactiveSlide] = [inactiveSlide, activeSlide];
                 currentSlide = nextIndex;
+                scheduleNext();
             }, fadeDuration);
         }
 
         if (bodyEl.classList.contains('home')) {
-            setSlideBackground(slideA, currentSlide);
-            setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
-            slideA.classList.add('active');
-            setTimeout(nextSlide, visibleDuration);
-            setInterval(nextSlide, visibleDuration + fadeDuration);
+            fetch('images/slideshow/manifest.json')
+                .then((response) => response.json())
+                .then((manifest) => {
+                    homeImages = manifest.images || [];
+                    return Promise.all(homeImages.map(preloadImage));
+                })
+                .then(() => {
+                    if (!homeImages.length) return;
+                    setSlideBackground(slideA, currentSlide);
+                    setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
+                    slideA.classList.add('active');
+                    scheduleNext();
+                })
+                .catch(() => {
+                    homeImages = [
+                        'images/slideshow/regentrude.jpg',
+                        'images/slideshow/feldfuge.jpg',
+                        'images/slideshow/kommentartheater.jpg',
+                        'images/slideshow/laundrywrack.jpg',
+                        'images/slideshow/viani-forte.jpg'
+                    ];
+                    return Promise.all(homeImages.map(preloadImage)).then(() => {
+                        setSlideBackground(slideA, currentSlide);
+                        setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
+                        slideA.classList.add('active');
+                        scheduleNext();
+                    });
+                });
         }
     </script>
 
