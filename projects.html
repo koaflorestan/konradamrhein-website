@@ -8,8 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="menu-icon" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false" role="button" tabindex="0">☰</div>
+    <button class="menu-icon" type="button" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
     <nav class="overlay-menu" id="sideMenu" aria-label="Hauptnavigation">
+        <button class="menu-close" type="button" onclick="toggleMenu()" aria-label="Menü schließen">✕</button>
         <div class="menu-items">
             <a href="index.html" onclick="toggleMenu()">Start</a>
             <a href="about.html" onclick="toggleMenu()">Über mich</a>
@@ -90,6 +95,8 @@
         const sideMenu = document.getElementById('sideMenu');
         function toggleMenu() {
             const open = sideMenu.classList.toggle('open');
+            document.body.classList.toggle('menu-open', open);
+            menuBtn.classList.toggle('is-open', open);
             menuBtn.setAttribute('aria-expanded', open);
             if (open) sideMenu.querySelector('a').focus(); else menuBtn.focus();
         }
