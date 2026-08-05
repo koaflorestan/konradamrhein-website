@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="home">
+    <div class="slideshow-wrapper" aria-hidden="true">
+        <div class="slideshow-slide slide-a"></div>
+        <div class="slideshow-slide slide-b"></div>
+    </div>
 
     <!-- Hamburger Icon oben links -->
     <div class="menu-icon" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false" role="button" tabindex="0">☰</div>
@@ -56,30 +60,35 @@
         ];
         let currentSlide = 0;
         const bodyEl = document.body;
+        const slideA = document.querySelector('.slide-a');
+        const slideB = document.querySelector('.slide-b');
         const visibleDuration = 5000;
         const fadeDuration = 1000;
+        let activeSlide = slideA;
+        let inactiveSlide = slideB;
 
-        function applyBackgrounds(currentIndex) {
-            const nextIndex = (currentIndex + 1) % homeImages.length;
-            bodyEl.style.setProperty('--bg-a', `url('${homeImages[currentIndex]}')`);
-            bodyEl.style.setProperty('--bg-b', `url('${homeImages[nextIndex]}')`);
+        function setSlideBackground(slide, index) {
+            slide.style.backgroundImage = `url('${homeImages[index]}')`;
         }
 
-        function startSlideshow() {
-            applyBackgrounds(currentSlide);
+        function nextSlide() {
+            const nextIndex = (currentSlide + 1) % homeImages.length;
+            setSlideBackground(inactiveSlide, nextIndex);
+            inactiveSlide.classList.add('active');
+
             setTimeout(() => {
-                bodyEl.classList.add('show-second');
-                setTimeout(() => {
-                    currentSlide = (currentSlide + 1) % homeImages.length;
-                    bodyEl.classList.remove('show-second');
-                    applyBackgrounds(currentSlide);
-                    startSlideshow();
-                }, fadeDuration);
-            }, visibleDuration);
+                activeSlide.classList.remove('active');
+                [activeSlide, inactiveSlide] = [inactiveSlide, activeSlide];
+                currentSlide = nextIndex;
+            }, fadeDuration);
         }
 
         if (bodyEl.classList.contains('home')) {
-            startSlideshow();
+            setSlideBackground(slideA, currentSlide);
+            setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
+            slideA.classList.add('active');
+            setTimeout(nextSlide, visibleDuration);
+            setInterval(nextSlide, visibleDuration + fadeDuration);
         }
     </script>
 

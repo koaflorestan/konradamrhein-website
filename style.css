@@ -15,29 +15,24 @@ body.home {
   color: #ffffff;
 }
 
-body.home::before,
-body.home::after {
-  content: '';
+.slideshow-wrapper {
   position: fixed;
   inset: 0;
   z-index: -2;
+  overflow: hidden;
+}
+
+.slideshow-slide {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
-
-body.home::before {
-  background-image: var(--bg-a, url('images/regentrude.jpg'));
-}
-
-body.home::after {
-  background-image: var(--bg-b, url('images/feldfuge.jpg'));
   opacity: 0;
   transition: opacity 1s ease;
-  z-index: -1;
 }
 
-body.home.show-second::after {
+.slideshow-slide.active {
   opacity: 1;
 }
 
