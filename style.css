@@ -67,6 +67,12 @@ h1 { font-size: 2.2rem; font-weight: bold; margin-bottom: 8px; color: #000000; }
 
 .project { border: 1px solid #eee; padding: 12px; margin-bottom: 12px; text-align: left; }
 
+/* Filter controls for projects */
+.filters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 18px 0; }
+.filter-btn { padding: 8px 12px; border: 1px solid #000; background: #fff; color: #000; cursor: pointer; border-radius: 4px; font-family: inherit; }
+.filter-btn.active { background: #000; color: #fff; }
+.project.hidden { display: none; }
+
 form { display: flex; flex-direction: column; gap: 8px; max-width: 480px; margin: 0 auto; }
 input, textarea { padding: 8px; border: 1px solid #ccc; font-family: inherit; }
 button { padding: 10px 14px; border: none; background: #000; color: #fff; cursor: pointer; }

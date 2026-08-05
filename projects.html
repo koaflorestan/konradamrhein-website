@@ -20,23 +20,32 @@
 
     <main id="main">
         <h1>Projekte</h1>
-        <div class="project">
+        <div class="filters" role="toolbar" aria-label="Projektkategorien">
+            <button class="filter-btn active" data-filter="all">Alle</button>
+            <button class="filter-btn" data-filter="Schauspiel">Schauspiel</button>
+            <button class="filter-btn" data-filter="Musiktheater">Musiktheater</button>
+            <button class="filter-btn" data-filter="Performance">Performance</button>
+            <button class="filter-btn" data-filter="Tanz">Tanz</button>
+            <button class="filter-btn" data-filter="Bildende Kunst">Bildende Kunst</button>
+        </div>
+
+        <div class="project" data-category="Musiktheater">
             <h2>Regentrude</h2>
             <p>Eine Adaption des Kunstmärchens von Theodor Storm.</p>
         </div>
-        <div class="project">
+        <div class="project" data-category="Musiktheater">
             <h2>Feldfuge</h2>
             <p>Ein Stück aus der Perspektive eines Feldackers</p>
         </div>
-        <div class="project">
+        <div class="project" data-category="Schauspiel">
             <h2>KommentarTheater</h2>
             <p>Digitale Kommentarspalten zu analogem Theater!</p>
         </div>
-        <div class="project">
+        <div class="project" data-category="Performance">
             <h2>LaundryWrack</h2>
             <p>Instrumente aus Wäscheständern</p>
         </div>
-        <div class="project">
+        <div class="project" data-category="Performance">
             <h2>Viani forte</h2>
             <p>Asthma Inhalatoren zum klingen bringen.</p>
         </div>
@@ -51,6 +60,28 @@
             if (open) sideMenu.querySelector('a').focus(); else menuBtn.focus();
         }
         menuBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); } });
+
+        // Project category filtering
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projects = document.querySelectorAll('.project');
+
+        function applyFilter(cat) {
+            const filter = String(cat).toLowerCase();
+            projects.forEach(p => {
+                const pc = p.getAttribute('data-category') || '';
+                const cats = pc.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+                if (filter === 'all' || cats.includes(filter)) p.classList.remove('hidden');
+                else p.classList.add('hidden');
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                applyFilter(btn.getAttribute('data-filter'));
+            });
+        });
     </script>
 </body>
 </html>
