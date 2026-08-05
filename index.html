@@ -61,17 +61,55 @@
         let activeSlide = slideA;
         let inactiveSlide = slideB;
 
-        function preloadImage(src) {
+        function calculateBrightness(image) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const regionSize = 0.35;
+            const regionWidth = Math.max(1, Math.floor(image.naturalWidth * regionSize));
+            const regionHeight = Math.max(1, Math.floor(image.naturalHeight * regionSize));
+            const sourceX = Math.max(0, image.naturalWidth - regionWidth);
+            const sourceY = 0;
+            const destWidth = Math.min(300, regionWidth);
+            const destHeight = Math.min(300, regionHeight);
+
+            canvas.width = destWidth;
+            canvas.height = destHeight;
+            ctx.drawImage(image, sourceX, sourceY, regionWidth, regionHeight, 0, 0, destWidth, destHeight);
+
+            const data = ctx.getImageData(0, 0, destWidth, destHeight).data;
+            let total = 0;
+            let count = 0;
+            const step = 40;
+
+            for (let i = 0; i < data.length; i += step) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                total += 0.299 * r + 0.587 * g + 0.114 * b;
+                count += 1;
+            }
+
+            return count > 0 ? total / count : 0;
+        }
+
+        function preloadAndMeasureImage(src) {
             return new Promise((resolve) => {
                 const img = new Image();
-                img.onload = () => resolve();
-                img.onerror = () => resolve();
+                img.onload = () => resolve({ src, brightness: calculateBrightness(img) });
+                img.onerror = () => resolve({ src, brightness: 0 });
                 img.src = src;
             });
         }
 
         function setSlideBackground(slide, index) {
             slide.style.backgroundImage = `url('${homeImages[index]}')`;
+        }
+
+        function setHeadingColor(index) {
+            const heading = document.querySelector('body.home h1');
+            const threshold = 170;
+            const isBright = brightnessValues[index] > threshold;
+            heading.classList.toggle('dark', isBright);
         }
 
         function scheduleNext() {
@@ -83,6 +121,7 @@
         function nextSlide() {
             const nextIndex = (currentSlide + 1) % homeImages.length;
             setSlideBackground(inactiveSlide, nextIndex);
+            setHeadingColor(nextIndex);
             requestAnimationFrame(() => {
                 inactiveSlide.classList.add('active');
             });
@@ -95,32 +134,45 @@
             }, fadeDuration);
         }
 
+        const brightnessValues = [];
+
         if (bodyEl.classList.contains('home')) {
             fetch('images/slideshow/manifest.json')
                 .then((response) => response.json())
                 .then((manifest) => {
                     homeImages = manifest.images || [];
-                    return Promise.all(homeImages.map(preloadImage));
+                    return Promise.all(homeImages.map(preloadAndMeasureImage));
                 })
-                .then(() => {
+                .then((measures) => {
+                    measures.forEach((item, index) => {
+                        homeImages[index] = item.src;
+                        brightnessValues[index] = item.brightness;
+                    });
+
                     if (!homeImages.length) return;
                     setSlideBackground(slideA, currentSlide);
                     setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
                     slideA.classList.add('active');
+                    setHeadingColor(currentSlide);
                     scheduleNext();
                 })
                 .catch(() => {
                     homeImages = [
-                        'images/slideshow/regentrude.jpg',
-                        'images/slideshow/feldfuge.jpg',
-                        'images/slideshow/kommentartheater.jpg',
-                        'images/slideshow/laundrywrack.jpg',
-                        'images/slideshow/viani-forte.jpg'
+                        'images/slideshow/slide-1.jpg',
+                        'images/slideshow/slide-2.jpg',
+                        'images/slideshow/slide-3.jpg',
+                        'images/slideshow/slide-4.jpg',
+                        'images/slideshow/slide-5.jpg'
                     ];
-                    return Promise.all(homeImages.map(preloadImage)).then(() => {
+                    return Promise.all(homeImages.map(preloadAndMeasureImage)).then((measures) => {
+                        measures.forEach((item, index) => {
+                            homeImages[index] = item.src;
+                            brightnessValues[index] = item.brightness;
+                        });
                         setSlideBackground(slideA, currentSlide);
                         setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
                         slideA.classList.add('active');
+                        setHeadingColor(currentSlide);
                         scheduleNext();
                     });
                 });

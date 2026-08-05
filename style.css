@@ -51,6 +51,11 @@ body.home h1 {
   margin: 0;
   font-size: 2.4rem;
   color: #ffffff;
+  transition: color 1s ease;
+}
+
+body.home h1.dark {
+  color: #000000;
 }
 
 body.home .menu-icon {
