@@ -9,6 +9,77 @@ body {
   padding: 60px 20px;
 }
 
+body.home {
+  position: relative;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+body.home::before,
+body.home::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body.home::before {
+  background-image: var(--bg-a, url('images/regentrude.jpg'));
+}
+
+body.home::after {
+  background-image: var(--bg-b, url('images/feldfuge.jpg'));
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: -1;
+}
+
+body.home.show-second::after {
+  opacity: 1;
+}
+
+body.home .card {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+body.home h1 {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  margin: 0;
+  font-size: 2.4rem;
+  color: #ffffff;
+}
+
+body.home .menu-icon {
+  color: #ffffff;
+}
+
+body.home .overlay-menu {
+  background-color: #000000;
+}
+
+body.home .menu-items a {
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+body.home .menu-items a:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+body.home .profile-img,
+body.home .subtitle {
+  display: none;
+}
+
 /* Hamburger-Icon oben links */
 .menu-icon {
   position: absolute;
@@ -29,7 +100,7 @@ body {
   width: 260px;
   height: 100%;
   background-color: #ffffff;
-  border-right: 2px solid #ff0000;
+  border-right: 2px solid #000000;
   transition: left 0.5s ease;
   z-index: 999;
   padding-top: 80px;
@@ -94,6 +165,11 @@ button { padding: 10px 14px; border: none; background: #000; color: #fff; cursor
   .menu-items a { font-size: 1rem; padding: 12px 20px; }
   .profile-img { width: 120px; height: 120px; }
   h1 { font-size: 1.8rem; }
+  body.home h1 {
+    top: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+  }
 }
 a {
   color: #000000;

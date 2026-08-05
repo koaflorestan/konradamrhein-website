@@ -7,7 +7,7 @@
     <meta name="description" content="Konrad Amrhein – Regisseur, Moderator und Sprecher. Portfolio, Projekte und Kontakt." />
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="home">
 
     <!-- Hamburger Icon oben links -->
     <div class="menu-icon" onclick="toggleMenu()" aria-controls="sideMenu" aria-expanded="false" role="button" tabindex="0">☰</div>
@@ -24,13 +24,7 @@
 
     <!-- Visitenkarte / Hauptinhalt -->
     <main id="main" class="card">
-        <!-- Dein Profilfoto -->
-        <img src="images/profilbild.jpg" alt="Konrad Amrhein" class="profile-img">
-
         <h1>Konrad Amrhein</h1>
-        <p class="subtitle">Regisseur / Moderator / Sprecher</p>
-        
-        
     </main>
 
     <!-- JavaScript für das Öffnen/Schließen des Menüs -->
@@ -51,6 +45,42 @@
                 toggleMenu();
             }
         });
+
+        // Startseiten-Slideshow ohne Profilbild
+        const homeImages = [
+            'images/regentrude.jpg',
+            'images/feldfuge.jpg',
+            'images/kommentartheater.jpg',
+            'images/laundrywrack.jpg',
+            'images/viani-forte.jpg'
+        ];
+        let currentSlide = 0;
+        const bodyEl = document.body;
+        const visibleDuration = 5000;
+        const fadeDuration = 1000;
+
+        function applyBackgrounds(currentIndex) {
+            const nextIndex = (currentIndex + 1) % homeImages.length;
+            bodyEl.style.setProperty('--bg-a', `url('${homeImages[currentIndex]}')`);
+            bodyEl.style.setProperty('--bg-b', `url('${homeImages[nextIndex]}')`);
+        }
+
+        function startSlideshow() {
+            applyBackgrounds(currentSlide);
+            setTimeout(() => {
+                bodyEl.classList.add('show-second');
+                setTimeout(() => {
+                    currentSlide = (currentSlide + 1) % homeImages.length;
+                    bodyEl.classList.remove('show-second');
+                    applyBackgrounds(currentSlide);
+                    startSlideshow();
+                }, fadeDuration);
+            }, visibleDuration);
+        }
+
+        if (bodyEl.classList.contains('home')) {
+            startSlideshow();
+        }
     </script>
 
 </body>
