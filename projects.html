@@ -29,25 +29,59 @@
             <button class="filter-btn" data-filter="Bildende Kunst">Bildende Kunst</button>
         </div>
 
-        <div class="project" data-category="Musiktheater">
-            <h2>Regentrude</h2>
-            <p>Eine Adaption des Kunstmärchens von Theodor Storm.</p>
+        <div class="project" data-category="Musiktheater" id="regentrude">
+            <div class="project-summary" role="button" tabindex="0" aria-expanded="false">
+                <h2>Regentrude</h2>
+            </div>
+            <div class="project-details" aria-hidden="true">
+                <img src="images/regentrude.jpg" alt="Regentrude" class="preview-img">
+                <p class="preview-text">Eine Adaption des Kunstmärchens von Theodor Storm.</p>
+                <a class="more-link" href="regentrude.html">Mehr Infos</a>
+            </div>
         </div>
-        <div class="project" data-category="Musiktheater">
-            <h2>Feldfuge</h2>
-            <p>Ein Stück aus der Perspektive eines Feldackers</p>
+
+        <div class="project" data-category="Musiktheater" id="feldfuge">
+            <div class="project-summary" role="button" tabindex="0" aria-expanded="false">
+                <h2>Feldfuge</h2>
+            </div>
+            <div class="project-details" aria-hidden="true">
+                <img src="images/feldfuge.jpg" alt="Feldfuge" class="preview-img">
+                <p class="preview-text">Ein Stück aus der Perspektive eines Feldackers.</p>
+                <a class="more-link" href="feldfuge.html">Mehr Infos</a>
+            </div>
         </div>
-        <div class="project" data-category="Schauspiel">
-            <h2>KommentarTheater</h2>
-            <p>Digitale Kommentarspalten zu analogem Theater!</p>
+
+        <div class="project" data-category="Schauspiel" id="kommentartheater">
+            <div class="project-summary" role="button" tabindex="0" aria-expanded="false">
+                <h2>KommentarTheater</h2>
+            </div>
+            <div class="project-details" aria-hidden="true">
+                <img src="images/kommentartheater.jpg" alt="KommentarTheater" class="preview-img">
+                <p class="preview-text">Digitale Kommentarspalten zu analogem Theater!</p>
+                <a class="more-link" href="kommentartheater.html">Mehr Infos</a>
+            </div>
         </div>
-        <div class="project" data-category="Performance">
-            <h2>LaundryWrack</h2>
-            <p>Instrumente aus Wäscheständern</p>
+
+        <div class="project" data-category="Performance" id="laundrywrack">
+            <div class="project-summary" role="button" tabindex="0" aria-expanded="false">
+                <h2>LaundryWrack</h2>
+            </div>
+            <div class="project-details" aria-hidden="true">
+                <img src="images/laundrywrack.jpg" alt="LaundryWrack" class="preview-img">
+                <p class="preview-text">Instrumente aus Wäscheständern.</p>
+                <a class="more-link" href="laundrywrack.html">Mehr Infos</a>
+            </div>
         </div>
-        <div class="project" data-category="Performance">
-            <h2>Viani forte</h2>
-            <p>Asthma Inhalatoren zum klingen bringen.</p>
+
+        <div class="project" data-category="Performance" id="viani-forte">
+            <div class="project-summary" role="button" tabindex="0" aria-expanded="false">
+                <h2>Viani forte</h2>
+            </div>
+            <div class="project-details" aria-hidden="true">
+                <img src="images/viani-forte.jpg" alt="Viani forte" class="preview-img">
+                <p class="preview-text">Asthma Inhalatoren zum klingen bringen.</p>
+                <a class="more-link" href="viani-forte.html">Mehr Infos</a>
+            </div>
         </div>
     </main>
 
@@ -81,6 +115,20 @@
                 btn.classList.add('active');
                 applyFilter(btn.getAttribute('data-filter'));
             });
+        });
+
+        // Expand/collapse project previews
+        const summaries = document.querySelectorAll('.project-summary');
+        summaries.forEach(s => {
+            const toggle = () => {
+                const project = s.closest('.project');
+                const expanded = project.classList.toggle('expanded');
+                s.setAttribute('aria-expanded', expanded);
+                const details = project.querySelector('.project-details');
+                if (details) details.setAttribute('aria-hidden', !expanded);
+            };
+            s.addEventListener('click', toggle);
+            s.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
         });
     </script>
 </body>
