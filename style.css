@@ -404,8 +404,8 @@ button { padding: 10px 14px; border: none; background: #000; color: #fff; cursor
 /* scroll snap alignment + visibility classes */
 .card-vertical { scroll-snap-align: center; opacity: 0.28; }
 .card-vertical.center { opacity: 1; transform: scale(1.01); }
-.card-vertical.side { opacity: 0.6; }
-.card-vertical.far { opacity: 0.18; }
+.card-vertical.side { opacity: 0.3; }
+.card-vertical.far { opacity: 0.15; }
 
 /* Expanded card view: hide others and make the clicked card fill the area */
 .cards-track.expanded .card-vertical { display: none; }
@@ -524,8 +524,8 @@ button { padding: 10px 14px; border: none; background: #000; color: #fff; cursor
 .card-vertical.expanded .card-close { display: flex; }
 .card-close:focus { outline: 2px solid rgba(0,0,0,0.12); }
 
-/* When a card is open, prevent body scrolling */
-body.card-open { overflow: hidden; }
+/* When a card is open, body is locked via JavaScript with position: fixed */
+body.card-open { }
 
 @media (max-width: 800px) {
   .card-vertical { flex: 0 0 260px; }

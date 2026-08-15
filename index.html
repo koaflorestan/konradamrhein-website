@@ -434,15 +434,18 @@
                                 overlayClose.innerText = '✕';
                                 overlay.appendChild(overlayClose);
 
-                                // Save scroll position before locking body
+                                // Save scroll position and lock it
                                 const scrollY = window.scrollY;
                                 
                                 document.body.appendChild(overlay);
                                 // mark the original card so its Mehr button is hidden
                                 card.classList.add('overlay-open');
+                                
+                                // Lock body with fixed positioning to prevent scrolling
+                                document.body.style.position = 'fixed';
+                                document.body.style.width = '100%';
+                                document.body.style.top = `-${scrollY}px`;
                                 document.body.classList.add('card-open');
-                                // Restore scroll position immediately after adding card-open class
-                                window.scrollTo(0, scrollY);
 
                                 // focus management
                                 overlay.setAttribute('tabindex', '-1');
@@ -452,8 +455,12 @@
                                     if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
                                     // restore original card's state
                                     card.classList.remove('overlay-open');
+                                    
+                                    // Unlock body and restore scroll position
+                                    document.body.style.position = '';
+                                    document.body.style.width = '';
+                                    document.body.style.top = '';
                                     document.body.classList.remove('card-open');
-                                    // Restore scroll position after removing card-open class
                                     window.scrollTo(0, scrollY);
                                     collapseAll();
                                 }
