@@ -42,86 +42,30 @@
     <section id="aktuelles" class="section aktuelles">
         <div class="container">
             <h2>Aktuelles</h2>
-
             <div class="cards-container">
                 <button class="cards-arrow left" aria-label="Vorheriges">‹</button>
                 <div class="cards-viewport">
-                                        <div class="cards-track">
-                                                <article class="card-vertical" tabindex="0">
-                                                        <button class="card-close" aria-label="Schließen">✕</button>
-                                                        <img src="images/regentrude.jpg" alt="Regentrude">
-                                                        <div class="card-body">
-                                                            <h3>Regentrude — Projekt A</h3>
-                                                            <p>Kurzbeschreibung zu Projekt A. Aktuelles, Termine und Infos.</p>
-                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
-                                                        </div>
-                                                </article>
-                                                <article class="card-vertical" tabindex="0">
-                                                        <button class="card-close" aria-label="Schließen">✕</button>
-                                                        <img src="images/regentrude.jpg" alt="Regentrude">
-                                                        <div class="card-body">
-                                                            <h3>Regentrude — Projekt B</h3>
-                                                            <p>Kurzbeschreibung zu Projekt B. Aktuelles, Termine und Infos.</p>
-                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
-                                                        </div>
-                                                </article>
-                                                <article class="card-vertical" tabindex="0">
-                                                        <button class="card-close" aria-label="Schließen">✕</button>
-                                                        <img src="images/regentrude.jpg" alt="Regentrude">
-                                                        <div class="card-body">
-                                                            <h3>Regentrude — Projekt C</h3>
-                                                            <p>Kurzbeschreibung zu Projekt C. Aktuelles, Termine und Infos.</p>
-                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
-                                                        </div>
-                                                </article>
-                                                <article class="card-vertical" tabindex="0">
-                                                        <button class="card-close" aria-label="Schließen">✕</button>
-                                                        <img src="images/regentrude.jpg" alt="Regentrude">
-                                                        <div class="card-body">
-                                                            <h3>Regentrude — Projekt D</h3>
-                                                            <p>Kurzbeschreibung zu Projekt D. Aktuelles, Termine und Infos.</p>
-                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
-                                                        </div>
-                                                </article>
-                                                <article class="card-vertical" tabindex="0">
-                                                        <button class="card-close" aria-label="Schließen">✕</button>
-                                                        <img src="images/regentrude.jpg" alt="Regentrude">
-                                                        <div class="card-body">
-                                                            <h3>Regentrude — Projekt E</h3>
-                                                            <p>Kurzbeschreibung zu Projekt E. Aktuelles, Termine und Infos.</p>
-                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
-                                                        </div>
-                                                </article>
-                                                <article class="card-vertical" tabindex="0">
-                                                        <button class="card-close" aria-label="Schließen">✕</button>
-                                                        <img src="images/regentrude.jpg" alt="Regentrude">
-                                                        <div class="card-body">
-                                                            <h3>Regentrude — Projekt F</h3>
-                                                            <p>Kurzbeschreibung zu Projekt F. Aktuelles, Termine und Infos.</p>
-                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
-                                                        </div>
-                                                </article>
-                                        </div>
+                    <div class="cards-track" id="cardsTrack"></div>
                 </div>
                 <button class="cards-arrow right" aria-label="Nächstes">›</button>
             </div>
         </div>
     </section>
 
-    <!-- JavaScript für das Öffnen/Schließen des Menüs -->
     <script>
+        // ============ Menu Toggle ============
         const menuBtn = document.querySelector('.menu-icon');
         const sideMenu = document.getElementById('sideMenu');
+        
         function toggleMenu() {
-            const open = sideMenu.classList.toggle('open');
-            document.body.classList.toggle('menu-open', open);
-            menuBtn.classList.toggle('is-open', open);
-            menuBtn.setAttribute('aria-expanded', open);
-            if (open) sideMenu.querySelector('a').focus();
-            else menuBtn.focus();
+            const isOpen = sideMenu.classList.toggle('open');
+            document.body.classList.toggle('menu-open', isOpen);
+            menuBtn.classList.toggle('is-open', isOpen);
+            menuBtn.setAttribute('aria-expanded', isOpen);
+            const firstLink = sideMenu.querySelector('a');
+            if (firstLink) (isOpen ? firstLink : menuBtn).focus();
         }
 
-        // Tastaturzugänglichkeit: Enter/Space für das Icon
         menuBtn.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -129,16 +73,26 @@
             }
         });
 
-        // Startseiten-Slideshow ohne Profilbild
+        // ============ Slideshow Setup ============
+        const SLIDESHOW_CONFIG = {
+            visibleDuration: 5000,
+            fadeDuration: 1000,
+            brightnessThreshold: 170,
+            fallbackImages: [
+                'images/slideshow/slide-1.jpg',
+                'images/slideshow/slide-2.jpg',
+                'images/slideshow/slide-3.jpg',
+                'images/slideshow/slide-4.jpg',
+                'images/slideshow/slide-5.jpg'
+            ]
+        };
+
         let homeImages = [];
+        let brightnessValues = [];
         let currentSlide = 0;
+        let activeSlide = document.querySelector('.slide-a');
+        let inactiveSlide = document.querySelector('.slide-b');
         const bodyEl = document.body;
-        const slideA = document.querySelector('.slide-a');
-        const slideB = document.querySelector('.slide-b');
-        const visibleDuration = 5000;
-        const fadeDuration = 1000;
-        let activeSlide = slideA;
-        let inactiveSlide = slideB;
 
         function calculateBrightness(image) {
             const canvas = document.createElement('canvas');
@@ -156,22 +110,16 @@
             ctx.drawImage(image, sourceX, sourceY, regionWidth, regionHeight, 0, 0, destWidth, destHeight);
 
             const data = ctx.getImageData(0, 0, destWidth, destHeight).data;
-            let total = 0;
-            let count = 0;
-            const step = 40;
-
+            let total = 0, count = 0, step = 40;
             for (let i = 0; i < data.length; i += step) {
-                const r = data[i];
-                const g = data[i + 1];
-                const b = data[i + 2];
+                const r = data[i], g = data[i + 1], b = data[i + 2];
                 total += 0.299 * r + 0.587 * g + 0.114 * b;
-                count += 1;
+                count++;
             }
-
             return count > 0 ? total / count : 0;
         }
 
-        function preloadAndMeasureImage(src) {
+        function preloadImage(src) {
             return new Promise((resolve) => {
                 const img = new Image();
                 img.onload = () => resolve({ src, brightness: calculateBrightness(img) });
@@ -186,309 +134,289 @@
 
         function setHeadingColor(index) {
             const heading = document.querySelector('body.home h1');
-            const threshold = 170;
-            const isBright = brightnessValues[index] > threshold;
-            // Toggle heading class and menu-icon classes together so they animate in parallel
-            heading.classList.toggle('dark', isBright);
-            // set CSS variable for synchronized UI color on the body (stronger scope)
-            const uiColor = isBright ? '#000000' : '#ffffff';
-            bodyEl.style.setProperty('--ui-color', uiColor);
-        }
-
-        function scheduleNext() {
-            setTimeout(() => {
-                nextSlide();
-            }, visibleDuration);
+            const isBright = brightnessValues[index] > SLIDESHOW_CONFIG.brightnessThreshold;
+            heading?.classList.toggle('dark', isBright);
+            bodyEl.style.setProperty('--ui-color', isBright ? '#000000' : '#ffffff');
         }
 
         function nextSlide() {
             const nextIndex = (currentSlide + 1) % homeImages.length;
             setSlideBackground(inactiveSlide, nextIndex);
-            requestAnimationFrame(() => {
-                inactiveSlide.classList.add('active');
-            });
+            requestAnimationFrame(() => inactiveSlide.classList.add('active'));
 
-            // Change heading + hamburger color in the middle of the fade
-            const colorChangeDelay = Math.max(0, Math.floor(fadeDuration / 2));
-            setTimeout(() => {
-                setHeadingColor(nextIndex);
-            }, colorChangeDelay);
+            setTimeout(() => setHeadingColor(nextIndex), Math.floor(SLIDESHOW_CONFIG.fadeDuration / 2));
 
             setTimeout(() => {
                 activeSlide.classList.remove('active');
                 [activeSlide, inactiveSlide] = [inactiveSlide, activeSlide];
                 currentSlide = nextIndex;
-                scheduleNext();
-            }, fadeDuration);
+                setTimeout(nextSlide, SLIDESHOW_CONFIG.visibleDuration);
+            }, SLIDESHOW_CONFIG.fadeDuration);
         }
 
-        const brightnessValues = [];
+        function initSlideshow(images) {
+            homeImages = images;
+            if (!homeImages.length) return;
+            setSlideBackground(activeSlide, 0);
+            setSlideBackground(inactiveSlide, 1);
+            activeSlide.classList.add('active');
+            setHeadingColor(0);
+            setTimeout(nextSlide, SLIDESHOW_CONFIG.visibleDuration);
+        }
 
         if (bodyEl.classList.contains('home')) {
             fetch('images/slideshow/manifest.json')
-                .then((response) => response.json())
-                .then((manifest) => {
-                    homeImages = manifest.images || [];
-                    return Promise.all(homeImages.map(preloadAndMeasureImage));
+                .then(r => r.json())
+                .then(m => {
+                    const images = m.images || [];
+                    return images.length ? Promise.all(images.map(preloadImage)) : Promise.reject();
                 })
-                .then((measures) => {
-                    measures.forEach((item, index) => {
-                        homeImages[index] = item.src;
-                        brightnessValues[index] = item.brightness;
+                .then(measures => {
+                    measures.forEach((m, i) => {
+                        homeImages[i] = m.src;
+                        brightnessValues[i] = m.brightness;
                     });
-
-                    if (!homeImages.length) return;
-                    setSlideBackground(slideA, currentSlide);
-                    setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
-                    slideA.classList.add('active');
-                    setHeadingColor(currentSlide);
-                    scheduleNext();
+                    initSlideshow(homeImages);
                 })
                 .catch(() => {
-                    homeImages = [
-                        'images/slideshow/slide-1.jpg',
-                        'images/slideshow/slide-2.jpg',
-                        'images/slideshow/slide-3.jpg',
-                        'images/slideshow/slide-4.jpg',
-                        'images/slideshow/slide-5.jpg'
-                    ];
-                    return Promise.all(homeImages.map(preloadAndMeasureImage)).then((measures) => {
-                        measures.forEach((item, index) => {
-                            homeImages[index] = item.src;
-                            brightnessValues[index] = item.brightness;
+                    Promise.all(SLIDESHOW_CONFIG.fallbackImages.map(preloadImage))
+                        .then(measures => {
+                            homeImages = SLIDESHOW_CONFIG.fallbackImages;
+                            measures.forEach((m, i) => brightnessValues[i] = m.brightness);
+                            initSlideshow(homeImages);
                         });
-                        setSlideBackground(slideA, currentSlide);
-                        setSlideBackground(slideB, (currentSlide + 1) % homeImages.length);
-                        slideA.classList.add('active');
-                        setHeadingColor(currentSlide);
-                        scheduleNext();
-                    });
                 });
         }
     </script>
 
     <script>
+        // ============ Cards Data & Template ============
+        const CARDS_DATA = [
+            { title: 'Regentrude — Projekt A', desc: 'Kurzbeschreibung zu Projekt A. Aktuelles, Termine und Infos.' },
+            { title: 'Regentrude — Projekt B', desc: 'Kurzbeschreibung zu Projekt B. Aktuelles, Termine und Infos.' },
+            { title: 'Regentrude — Projekt C', desc: 'Kurzbeschreibung zu Projekt C. Aktuelles, Termine und Infos.' },
+            { title: 'Regentrude — Projekt D', desc: 'Kurzbeschreibung zu Projekt D. Aktuelles, Termine und Infos.' },
+            { title: 'Regentrude — Projekt E', desc: 'Kurzbeschreibung zu Projekt E. Aktuelles, Termine und Infos.' },
+            { title: 'Regentrude — Projekt F', desc: 'Kurzbeschreibung zu Projekt F. Aktuelles, Termine und Infos.' }
+        ];
+
+        function createCardElement(data) {
+            const article = document.createElement('article');
+            article.className = 'card-vertical';
+            article.tabIndex = 0;
+            article.innerHTML = `
+                <button class="card-close" aria-label="Schließen">✕</button>
+                <img src="images/regentrude.jpg" alt="${data.title}">
+                <div class="card-body">
+                    <h3>${data.title}</h3>
+                    <p>${data.desc}</p>
+                    <div class="card-actions"><button class="card-more">Mehr</button></div>
+                </div>
+            `;
+            return article;
+        }
+
+        function renderCards(track) {
+            track.innerHTML = '';
+            CARDS_DATA.forEach(data => track.appendChild(createCardElement(data)));
+        }
+
+        // ============ Cards Functionality ============
         document.addEventListener('DOMContentLoaded', () => {
-            const containers = document.querySelectorAll('#aktuelles .cards-container');
-            containers.forEach(container => {
-                const viewport = container.querySelector('.cards-viewport');
-                const track = container.querySelector('.cards-track');
-                const left = container.querySelector('.cards-arrow.left');
-                const right = container.querySelector('.cards-arrow.right');
+            const cardsTrack = document.getElementById('cardsTrack');
+            if (cardsTrack) renderCards(cardsTrack);
 
+            const container = document.querySelector('.cards-container');
+            const viewport = container.querySelector('.cards-viewport');
+            const track = container.querySelector('.cards-track');
+            const [leftBtn, rightBtn] = ['.cards-arrow.left', '.cards-arrow.right'].map(sel => container.querySelector(sel));
+            const cards = () => track.querySelectorAll('.card-vertical');
 
-                function cardWidth() {
-                    const card = track.querySelector('.card-vertical');
-                    if (!card) return Math.floor(viewport.clientWidth * 0.8);
-                    const style = getComputedStyle(track);
-                    const gap = parseInt(style.gap || 16, 10) || 16;
-                    return Math.round(card.offsetWidth + gap);
+            function getCenterCard() {
+                return track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
+            }
+
+            function scrollToCard(card) {
+                if (card) card.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            }
+
+            function handleArrowClick(direction) {
+                const center = getCenterCard();
+                const target = direction === 'left'
+                    ? center.previousElementSibling || track.querySelector('.card-vertical')
+                    : center.nextElementSibling || track.querySelector('.card-vertical:last-child');
+                scrollToCard(target);
+            }
+
+            function handleArrowKey(direction, e) {
+                if ((direction === 'left' && e.key === 'ArrowLeft') || 
+                    (direction === 'right' && e.key === 'ArrowRight')) {
+                    e.preventDefault();
+                    handleArrowClick(direction);
+                }
+            }
+
+            leftBtn?.addEventListener('click', () => handleArrowClick('left'));
+            rightBtn?.addEventListener('click', () => handleArrowClick('right'));
+            viewport.addEventListener('keydown', (e) => {
+                handleArrowKey('left', e);
+                handleArrowKey('right', e);
+            });
+
+            // ============ Intersection Observers ============
+            const aktuellesEl = document.getElementById('aktuelles');
+            if (aktuellesEl) {
+                new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        aktuellesEl.classList.add('visible');
+                        event.target.observe = false; // unobserve after first
+                    }
+                }, { threshold: 0.1 }).observe(aktuellesEl);
+
+                new IntersectionObserver((entries) => {
+                    document.body.classList.toggle('scrolled', entries[0].isIntersecting);
+                }, { threshold: 0.05 }).observe(aktuellesEl);
+            }
+
+            // ============ Center Card Tracking ============
+            let centerScheduled = false;
+
+            function updateCenterClasses() {
+                centerScheduled = false;
+                const vRect = viewport.getBoundingClientRect();
+                const centerX = vRect.left + vRect.width / 2;
+                let minDist = Infinity, centerIdx = -1;
+
+                cards().forEach((c, i) => {
+                    const r = c.getBoundingClientRect();
+                    const cX = r.left + r.width / 2;
+                    const dist = Math.abs(cX - centerX);
+                    if (dist < minDist) { minDist = dist; centerIdx = i; }
+                });
+
+                cards().forEach((c, i) => {
+                    c.classList.remove('center', 'side', 'far');
+                    if (i === centerIdx) c.classList.add('center');
+                    else if (Math.abs(i - centerIdx) === 1) c.classList.add('side');
+                    else c.classList.add('far');
+                });
+            }
+
+            function scheduleUpdate() {
+                if (!centerScheduled) { centerScheduled = true; requestAnimationFrame(updateCenterClasses); }
+            }
+
+            viewport.addEventListener('scroll', scheduleUpdate);
+            window.addEventListener('resize', scheduleUpdate);
+            scheduleUpdate();
+
+            // ============ Track Padding & Card Expansion ============
+            function updateTrackPadding() {
+                const first = track.querySelector('.card-vertical');
+                if (!first) return;
+                const cardW = first.offsetWidth;
+                const side = Math.round((viewport.clientWidth - cardW) / 2);
+                track.style.paddingLeft = track.style.paddingRight = side + 'px';
+            }
+
+            window.addEventListener('resize', updateTrackPadding);
+            updateTrackPadding();
+
+            function collapseAll() {
+                track.classList.remove('expanded');
+                container.classList.remove('expanded');
+                cards().forEach(c => c.classList.remove('expanded'));
+                document.body.classList.remove('card-open');
+            }
+
+            function createOverlay(card) {
+                const overlay = document.createElement('div');
+                overlay.className = 'card-overlay';
+                overlay.setAttribute('role', 'dialog');
+                overlay.setAttribute('aria-modal', 'true');
+
+                const innerDiv = document.createElement('div');
+                innerDiv.className = 'overlay-content';
+
+                const img = card.querySelector('img');
+                const imgClone = img?.cloneNode(true) || document.createElement('img');
+                if (!imgClone.src && img?.src) imgClone.src = img.src;
+
+                const body = card.querySelector('.card-body');
+                const bodyClone = document.createElement('div');
+                bodyClone.className = 'card-body';
+                if (body) bodyClone.innerHTML = body.innerHTML;
+                bodyClone.querySelector('.card-more')?.remove();
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'card-close';
+                closeBtn.setAttribute('aria-label', 'Schließen');
+                closeBtn.innerText = '✕';
+
+                innerDiv.appendChild(imgClone);
+                innerDiv.appendChild(bodyClone);
+                overlay.appendChild(innerDiv);
+                overlay.appendChild(closeBtn);
+
+                return { overlay, closeBtn };
+            }
+
+            function toggleCardExpand(card) {
+                if (card.classList.contains('expanded')) {
+                    collapseAll();
+                    return;
                 }
 
-                // ensure first/last cards can be centered by adding side padding
-                function updateTrackPadding() {
-                    const first = track.querySelector('.card-vertical');
-                    if (!first) return;
-                    const cardW = first.offsetWidth;
-                    const side = Math.max(0, Math.round((viewport.clientWidth - cardW) / 2));
-                    // keep existing vertical padding intact
-                    track.style.paddingLeft = side + 'px';
-                    track.style.paddingRight = side + 'px';
+                const scrollY = window.scrollY;
+                const { overlay, closeBtn } = createOverlay(card);
+
+                track.classList.add('expanded');
+                container.classList.add('expanded');
+                document.body.appendChild(overlay);
+                card.classList.add('overlay-open');
+
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.classList.add('card-open');
+
+                overlay.setAttribute('tabindex', '-1');
+                overlay.focus();
+
+                function removeOverlay() {
+                    overlay.remove();
+                    card.classList.remove('overlay-open');
+                    document.body.style.position = '';
+                    document.body.style.width = '';
+                    document.body.style.top = '';
+                    window.scrollTo(0, scrollY);
+                    collapseAll();
                 }
 
-                left.addEventListener('click', () => {
-                    // find currently centered card, then move one left (or to first)
-                    const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
-                    const prev = centerCard.previousElementSibling || track.querySelector('.card-vertical');
-                    if (prev) prev.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                closeBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); removeOverlay(); });
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) removeOverlay(); });
+                document.addEventListener('keydown', function onEsc(e) {
+                    if (e.key === 'Escape') { removeOverlay(); document.removeEventListener('keydown', onEsc); }
                 });
-                right.addEventListener('click', () => {
-                    const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
-                    const next = centerCard.nextElementSibling || track.querySelector('.card-vertical:last-child');
-                    if (next) next.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            }
+
+            cards().forEach(card => {
+                card.addEventListener('click', () => toggleCardExpand(card));
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCardExpand(card); }
+                    if (e.key === 'Escape') collapseAll();
                 });
 
-                // allow keyboard focus and arrow keys while focused
-                viewport.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowLeft') {
-                        e.preventDefault();
-                        const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
-                        const prev = centerCard.previousElementSibling || track.querySelector('.card-vertical');
-                        if (prev) prev.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-                    }
-                    if (e.key === 'ArrowRight') {
-                        e.preventDefault();
-                        const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
-                        const next = centerCard.nextElementSibling || track.querySelector('.card-vertical:last-child');
-                        if (next) next.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-                    }
+                card.querySelector('.card-close')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    collapseAll();
                 });
-        
-                    // Observe the Aktuelles section and reveal it when the user scrolls to it
-                    const aktuellesEl = document.getElementById('aktuelles');
-                    if (aktuellesEl) {
-                        // reveal once when first seen
-                        const io = new IntersectionObserver((entries, observer) => {
-                            entries.forEach(entry => {
-                                if (entry.isIntersecting) {
-                                    aktuellesEl.classList.add('visible');
-                                    observer.unobserve(entry.target);
-                                }
-                            });
-                        }, { threshold: 0.1 });
-                        io.observe(aktuellesEl);
 
-                        // keep slideshow hidden while Aktuelles is in view
-                        const ioToggle = new IntersectionObserver((entries) => {
-                            entries.forEach(entry => {
-                                if (entry.isIntersecting) document.body.classList.add('scrolled');
-                                else document.body.classList.remove('scrolled');
-                            });
-                        }, { threshold: 0.05 });
-                        ioToggle.observe(aktuellesEl);
-                    }
-
-                // Card expand/collapse behaviour
-                const cards = track.querySelectorAll('.card-vertical');
-                function collapseAll() {
-                    track.classList.remove('expanded');
-                    container.classList.remove('expanded');
-                    cards.forEach(c => c.classList.remove('expanded'));
-                    // restore body scroll
-                    document.body.classList.remove('card-open');
-                }
-
-                // Highlight center/side/far cards while scrolling
-                let centerScheduled = false;
-                function updateCenterClasses() {
-                    centerScheduled = false;
-                    const vRect = viewport.getBoundingClientRect();
-                    const centerX = vRect.left + vRect.width / 2;
-                    let min = Infinity; let centerIdx = -1;
-                    cards.forEach((c, i) => {
-                        const r = c.getBoundingClientRect();
-                        const cX = r.left + r.width / 2;
-                        const d = Math.abs(cX - centerX);
-                        if (d < min) { min = d; centerIdx = i; }
-                    });
-                    cards.forEach((c, i) => {
-                        c.classList.remove('center','side','far');
-                        if (i === centerIdx) c.classList.add('center');
-                        else if (i === centerIdx - 1 || i === centerIdx + 1) c.classList.add('side');
-                        else c.classList.add('far');
-                    });
-                }
-                viewport.addEventListener('scroll', () => {
-                    if (!centerScheduled) { centerScheduled = true; requestAnimationFrame(updateCenterClasses); }
-                });
-                window.addEventListener('resize', () => { if (!centerScheduled) { centerScheduled = true; requestAnimationFrame(updateCenterClasses); } });
-                // initial
-                requestAnimationFrame(() => { updateCenterClasses(); updateTrackPadding(); });
-                window.addEventListener('resize', () => { updateTrackPadding(); });
-
-                const closeBtn = container.querySelector('.cards-close');
-                if (closeBtn) closeBtn.addEventListener('click', (e) => { e.preventDefault(); collapseAll(); });
-
-                cards.forEach(card => {
-                    function toggle(e) {
-                        const isExpanded = card.classList.contains('expanded');
-                        if (isExpanded) {
-                            collapseAll();
-                        } else {
-                                // expand this card by creating a fixed overlay (clone) so layout doesn't shift
-                                // hide the track contents via class so originals don't show beneath overlay
-                                track.classList.add('expanded');
-                                container.classList.add('expanded');
-
-                                // build overlay
-                                const overlay = document.createElement('div');
-                                overlay.className = 'card-overlay';
-                                overlay.setAttribute('role', 'dialog');
-                                overlay.setAttribute('aria-modal', 'true');
-
-                                const overlayInner = document.createElement('div');
-                                overlayInner.className = 'overlay-content';
-
-                                // clone image and body content from the card
-                                const img = card.querySelector('img');
-                                const imgClone = img ? img.cloneNode(true) : document.createElement('img');
-                                if (!imgClone.src && img && img.getAttribute('src')) imgClone.src = img.getAttribute('src');
-
-                                const bodyClone = document.createElement('div');
-                                bodyClone.className = 'card-body';
-                                const bodyContent = card.querySelector('.card-body');
-                                if (bodyContent) bodyClone.innerHTML = bodyContent.innerHTML;
-
-                                overlayInner.appendChild(imgClone);
-                                overlayInner.appendChild(bodyClone);
-                                overlay.appendChild(overlayInner);
-
-                                // remove 'Mehr' button from overlay to avoid duplicate actions
-                                const overlayMoreBtn = overlay.querySelector('.card-more');
-                                if (overlayMoreBtn) overlayMoreBtn.remove();
-
-                                // close button
-                                const overlayClose = document.createElement('button');
-                                overlayClose.className = 'card-close';
-                                overlayClose.setAttribute('aria-label', 'Schließen');
-                                overlayClose.innerText = '✕';
-                                overlay.appendChild(overlayClose);
-
-                                // Save scroll position and lock it
-                                const scrollY = window.scrollY;
-                                
-                                document.body.appendChild(overlay);
-                                // mark the original card so its Mehr button is hidden
-                                card.classList.add('overlay-open');
-                                
-                                // Lock body with fixed positioning to prevent scrolling
-                                document.body.style.position = 'fixed';
-                                document.body.style.width = '100%';
-                                document.body.style.top = `-${scrollY}px`;
-                                document.body.classList.add('card-open');
-
-                                // focus management
-                                overlay.setAttribute('tabindex', '-1');
-                                overlay.focus();
-
-                                function removeOverlay() {
-                                    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-                                    // restore original card's state
-                                    card.classList.remove('overlay-open');
-                                    
-                                    // Unlock body and restore scroll position
-                                    document.body.style.position = '';
-                                    document.body.style.width = '';
-                                    document.body.style.top = '';
-                                    document.body.classList.remove('card-open');
-                                    window.scrollTo(0, scrollY);
-                                    collapseAll();
-                                }
-
-                                overlayClose.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); removeOverlay(); });
-                                overlay.addEventListener('click', (ev) => {
-                                    if (ev.target === overlay) removeOverlay();
-                                });
-                                document.addEventListener('keydown', function onKey(ev) {
-                                    if (ev.key === 'Escape') { removeOverlay(); document.removeEventListener('keydown', onKey); }
-                                });
-                        }
-                    }
-
-                    card.addEventListener('click', toggle);
-                    card.addEventListener('keydown', (ev) => {
-                        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(ev); }
-                        if (ev.key === 'Escape') { collapseAll(); }
-                    });
-
-                    const cClose = card.querySelector('.card-close');
-                    if (cClose) {
-                        cClose.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); collapseAll(); });
-                    }
-                    const moreBtn = card.querySelector('.card-more');
-                    if (moreBtn) {
-                        moreBtn.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); toggle(ev); });
-                    }
+                card.querySelector('.card-more')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleCardExpand(card);
                 });
             });
         });
