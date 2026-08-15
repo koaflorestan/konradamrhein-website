@@ -12,7 +12,9 @@ body {
 body.home {
   position: relative;
   min-height: 100vh;
-  color: #ffffff;
+  /* CSS variable used to synchronise heading + menu icon color */
+  --ui-color: #ffffff;
+  color: var(--ui-color);
 }
 
 .slideshow-wrapper {
@@ -50,8 +52,14 @@ body.home h1 {
   right: 25px;
   margin: 0;
   font-size: 2.4rem;
-  color: #ffffff;
-  transition: color 1s ease;
+  color: var(--ui-color, #ffffff);
+  transition: color 0.6s ease;
+}
+
+/* Make heading and hamburger behave identically: same transitions and will-change */
+body.home h1, body.home .menu-icon {
+  transition: color 0.6s ease, transform 0.6s ease, opacity 0.6s ease;
+  will-change: color, transform, opacity;
 }
 
 body.home h1.dark {
@@ -98,7 +106,8 @@ body.home .subtitle {
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  color: #000000;
+  color: var(--ui-color, #000000);
+  transition: color 0.6s ease;
 }
 
 .menu-icon span {
@@ -107,7 +116,7 @@ body.home .subtitle {
   height: 7px;
   background: currentColor;
   border-radius: 0;
-  transition: transform 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease, background 0.6s ease;
   opacity: 1;
 }
 

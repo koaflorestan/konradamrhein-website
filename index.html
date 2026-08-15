@@ -116,11 +116,11 @@
             const heading = document.querySelector('body.home h1');
             const threshold = 170;
             const isBright = brightnessValues[index] > threshold;
+            // Toggle heading class and menu-icon classes together so they animate in parallel
             heading.classList.toggle('dark', isBright);
-            const menuIcon = document.querySelector('body.home .menu-icon');
-            if (menuIcon) {
-                menuIcon.style.color = isBright ? '#000000' : '#ffffff';
-            }
+            // set CSS variable for synchronized UI color on the body (stronger scope)
+            const uiColor = isBright ? '#000000' : '#ffffff';
+            bodyEl.style.setProperty('--ui-color', uiColor);
         }
 
         function scheduleNext() {
@@ -132,10 +132,15 @@
         function nextSlide() {
             const nextIndex = (currentSlide + 1) % homeImages.length;
             setSlideBackground(inactiveSlide, nextIndex);
-            setHeadingColor(nextIndex);
             requestAnimationFrame(() => {
                 inactiveSlide.classList.add('active');
             });
+
+            // Change heading + hamburger color in the middle of the fade
+            const colorChangeDelay = Math.max(0, Math.floor(fadeDuration / 2));
+            setTimeout(() => {
+                setHeadingColor(nextIndex);
+            }, colorChangeDelay);
 
             setTimeout(() => {
                 activeSlide.classList.remove('active');
