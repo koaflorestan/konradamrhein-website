@@ -9,10 +9,11 @@ body {
   padding: 60px 20px;
 }
 
+/* On the home page we show the slideshow behind content, so make body transparent */
 body.home {
   position: relative;
   min-height: 100vh;
-  /* CSS variable used to synchronise heading + menu icon color */
+  background: transparent;
   --ui-color: #ffffff;
   color: var(--ui-color);
 }
@@ -22,6 +23,14 @@ body.home {
   inset: 0;
   z-index: -2;
   overflow: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+/* hide slideshow when user reached Aktuelles */
+body.scrolled .slideshow-wrapper {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .slideshow-slide {
@@ -278,6 +287,241 @@ button { padding: 10px 14px; border: none; background: #000; color: #fff; cursor
     right: 20px;
     font-size: 1.8rem;
   }
+}
+
+/* Hero section: fills the viewport so Aktuelles is below the fold */
+.section.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  background: transparent;
+}
+
+.section.hero .card { background: transparent; text-align: right; }
+
+/* Aktuelles section and horizontal cards */
+.section.aktuelles {
+  background: #ffffff;
+  color: #000000;
+  padding: 80px 10px;
+  /* initially hidden until user scrolls */
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+.section.aktuelles.visible {
+  opacity: 1;
+  transform: none;
+}
+.section.aktuelles h2 {
+  max-width: 1200px;
+  margin: 0 auto 18px;
+  padding: 0 20px;
+  font-size: 1.8rem;
+  text-align: left;
+}
+.cards-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+.cards-viewport {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  scroll-snap-type: x mandatory;
+}
+.cards-track {
+  display: flex;
+  gap: 16px;
+  /* track should size to its contents so it can scroll fully */
+  width: max-content;
+  padding: 8px 0 20px; /* left/right padding set dynamically in JS for centering */
+  align-items: flex-start;
+}
+.card-vertical {
+  /* fixed card width so cards remain legible */
+  flex: 0 0 320px;
+  max-width: 320px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  position: relative;
+}
+.card-vertical img { width: 100%; height: 420px; object-fit: cover; display: block; border-radius: 4px; margin-bottom: 8px; }
+.card-vertical h3 { margin: 8px 0; font-size: 1.05rem; }
+.card-vertical p { margin: 0; color: #333333; font-size: 0.95rem; }
+
+.card-body { display: block; }
+
+.card-actions { margin-top: 10px; text-align: right; }
+.card-more {
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.card-more:focus { outline: 2px solid rgba(0,0,0,0.12); }
+
+.cards-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 12;
+  opacity: 0.95;
+}
+.cards-arrow.left { left: 6px; }
+.cards-arrow.right { right: 6px; }
+
+.cards-viewport::-webkit-scrollbar { display: none; }
+.cards-viewport { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* scroll snap alignment + visibility classes */
+.card-vertical { scroll-snap-align: center; opacity: 0.28; }
+.card-vertical.center { opacity: 1; transform: scale(1.01); }
+.card-vertical.side { opacity: 0.6; }
+.card-vertical.far { opacity: 0.18; }
+
+/* Expanded card view: hide others and make the clicked card fill the area */
+.cards-track.expanded .card-vertical { display: none; }
+.cards-track.expanded .card-vertical.expanded {
+  /* expanded card becomes full-viewport, animated */
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 36px 48px;
+  box-shadow: none;
+  gap: 24px;
+  align-items: flex-start;
+  background: #ffffff;
+  transition: transform 320ms ease, opacity 320ms ease;
+}
+.cards-container.expanded .cards-arrow { display: none; }
+.card-vertical.expanded img { flex: 0 0 33.333%; width: 33.333%; height: auto; object-fit: cover; border-radius: 6px; }
+.card-vertical.expanded .card-body { flex: 1 1 66.666%; }
+.card-vertical.expanded .card-body { overflow: auto; max-height: calc(100vh - 80px); padding-right: 12px; }
+.card-vertical:focus { outline: 2px solid rgba(0,0,0,0.12); outline-offset: 3px; }
+.card-vertical.expanded h3 { font-size: 1.4rem; margin-top: 12px; }
+.card-vertical.expanded p { font-size: 1rem; margin-top: 8px; color: #222; }
+
+/* Overlay variant used when a cloned card is shown as modal to avoid layout shifts */
+.card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.98);
+  padding: 36px 20px;
+}
+.card-overlay .overlay-content {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  align-items: center;
+}
+.card-overlay .overlay-content img { flex: 0 0 33.333%; width: 33.333%; height: auto; object-fit: cover; border-radius: 6px; }
+.card-overlay .overlay-content .card-body { flex: 1 1 66.666%; overflow: auto; max-height: calc(100vh - 80px); padding-right: 12px; }
+.cards-container.expanded .cards-arrow { display: none; }
+.card-overlay .card-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1210;
+}
+
+/* hide the original 'Mehr' button while overlay is open on that card */
+.card-vertical.overlay-open .card-more { display: none !important; }
+
+/* Close button for expanded view */
+.cards-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  z-index: 20;
+  cursor: pointer;
+}
+.cards-container.expanded .cards-close { display: flex; }
+.cards-close:focus { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 3px; }
+
+/* per-card close button */
+.card-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid #e6e6e6;
+  background: #ffffff;
+  color: #000000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 30;
+  cursor: pointer;
+}
+.card-vertical.expanded .card-close { display: flex; }
+.card-close:focus { outline: 2px solid rgba(0,0,0,0.12); }
+
+/* When a card is open, prevent body scrolling */
+body.card-open { overflow: hidden; }
+
+@media (max-width: 800px) {
+  .card-vertical { flex: 0 0 260px; }
+  .card-vertical img { height: 320px; }
 }
 a {
   color: #000000;

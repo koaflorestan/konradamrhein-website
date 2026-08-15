@@ -31,10 +31,82 @@
         </div>
     </nav>
 
-    <!-- Visitenkarte / Hauptinhalt -->
-    <main id="main" class="card">
-        <h1>Konrad Amrhein</h1>
-    </main>
+    <!-- Hero / Visitenkarte (füllt Viewport) -->
+    <section id="hero" class="section hero">
+        <main id="main" class="card">
+            <h1>Konrad Amrhein</h1>
+        </main>
+    </section>
+
+    <!-- Aktuelles: Blog-Bereich mit horizontal scrollbaren Karten -->
+    <section id="aktuelles" class="section aktuelles">
+        <div class="container">
+            <h2>Aktuelles</h2>
+
+            <div class="cards-container">
+                <button class="cards-arrow left" aria-label="Vorheriges">‹</button>
+                <div class="cards-viewport">
+                                        <div class="cards-track">
+                                                <article class="card-vertical" tabindex="0">
+                                                        <button class="card-close" aria-label="Schließen">✕</button>
+                                                        <img src="images/regentrude.jpg" alt="Regentrude">
+                                                        <div class="card-body">
+                                                            <h3>Regentrude — Projekt A</h3>
+                                                            <p>Kurzbeschreibung zu Projekt A. Aktuelles, Termine und Infos.</p>
+                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
+                                                        </div>
+                                                </article>
+                                                <article class="card-vertical" tabindex="0">
+                                                        <button class="card-close" aria-label="Schließen">✕</button>
+                                                        <img src="images/regentrude.jpg" alt="Regentrude">
+                                                        <div class="card-body">
+                                                            <h3>Regentrude — Projekt B</h3>
+                                                            <p>Kurzbeschreibung zu Projekt B. Aktuelles, Termine und Infos.</p>
+                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
+                                                        </div>
+                                                </article>
+                                                <article class="card-vertical" tabindex="0">
+                                                        <button class="card-close" aria-label="Schließen">✕</button>
+                                                        <img src="images/regentrude.jpg" alt="Regentrude">
+                                                        <div class="card-body">
+                                                            <h3>Regentrude — Projekt C</h3>
+                                                            <p>Kurzbeschreibung zu Projekt C. Aktuelles, Termine und Infos.</p>
+                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
+                                                        </div>
+                                                </article>
+                                                <article class="card-vertical" tabindex="0">
+                                                        <button class="card-close" aria-label="Schließen">✕</button>
+                                                        <img src="images/regentrude.jpg" alt="Regentrude">
+                                                        <div class="card-body">
+                                                            <h3>Regentrude — Projekt D</h3>
+                                                            <p>Kurzbeschreibung zu Projekt D. Aktuelles, Termine und Infos.</p>
+                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
+                                                        </div>
+                                                </article>
+                                                <article class="card-vertical" tabindex="0">
+                                                        <button class="card-close" aria-label="Schließen">✕</button>
+                                                        <img src="images/regentrude.jpg" alt="Regentrude">
+                                                        <div class="card-body">
+                                                            <h3>Regentrude — Projekt E</h3>
+                                                            <p>Kurzbeschreibung zu Projekt E. Aktuelles, Termine und Infos.</p>
+                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
+                                                        </div>
+                                                </article>
+                                                <article class="card-vertical" tabindex="0">
+                                                        <button class="card-close" aria-label="Schließen">✕</button>
+                                                        <img src="images/regentrude.jpg" alt="Regentrude">
+                                                        <div class="card-body">
+                                                            <h3>Regentrude — Projekt F</h3>
+                                                            <p>Kurzbeschreibung zu Projekt F. Aktuelles, Termine und Infos.</p>
+                                                            <div class="card-actions"><button class="card-more">Mehr</button></div>
+                                                        </div>
+                                                </article>
+                                        </div>
+                </div>
+                <button class="cards-arrow right" aria-label="Nächstes">›</button>
+            </div>
+        </div>
+    </section>
 
     <!-- JavaScript für das Öffnen/Schließen des Menüs -->
     <script>
@@ -193,6 +265,218 @@
                     });
                 });
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const containers = document.querySelectorAll('#aktuelles .cards-container');
+            containers.forEach(container => {
+                const viewport = container.querySelector('.cards-viewport');
+                const track = container.querySelector('.cards-track');
+                const left = container.querySelector('.cards-arrow.left');
+                const right = container.querySelector('.cards-arrow.right');
+
+
+                function cardWidth() {
+                    const card = track.querySelector('.card-vertical');
+                    if (!card) return Math.floor(viewport.clientWidth * 0.8);
+                    const style = getComputedStyle(track);
+                    const gap = parseInt(style.gap || 16, 10) || 16;
+                    return Math.round(card.offsetWidth + gap);
+                }
+
+                // ensure first/last cards can be centered by adding side padding
+                function updateTrackPadding() {
+                    const first = track.querySelector('.card-vertical');
+                    if (!first) return;
+                    const cardW = first.offsetWidth;
+                    const side = Math.max(0, Math.round((viewport.clientWidth - cardW) / 2));
+                    // keep existing vertical padding intact
+                    track.style.paddingLeft = side + 'px';
+                    track.style.paddingRight = side + 'px';
+                }
+
+                left.addEventListener('click', () => {
+                    // find currently centered card, then move one left (or to first)
+                    const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
+                    const prev = centerCard.previousElementSibling || track.querySelector('.card-vertical');
+                    if (prev) prev.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                });
+                right.addEventListener('click', () => {
+                    const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
+                    const next = centerCard.nextElementSibling || track.querySelector('.card-vertical:last-child');
+                    if (next) next.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                });
+
+                // allow keyboard focus and arrow keys while focused
+                viewport.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
+                        const prev = centerCard.previousElementSibling || track.querySelector('.card-vertical');
+                        if (prev) prev.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                    }
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        const centerCard = track.querySelector('.card-vertical.center') || track.querySelector('.card-vertical');
+                        const next = centerCard.nextElementSibling || track.querySelector('.card-vertical:last-child');
+                        if (next) next.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                    }
+                });
+        
+                    // Observe the Aktuelles section and reveal it when the user scrolls to it
+                    const aktuellesEl = document.getElementById('aktuelles');
+                    if (aktuellesEl) {
+                        // reveal once when first seen
+                        const io = new IntersectionObserver((entries, observer) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    aktuellesEl.classList.add('visible');
+                                    observer.unobserve(entry.target);
+                                }
+                            });
+                        }, { threshold: 0.1 });
+                        io.observe(aktuellesEl);
+
+                        // keep slideshow hidden while Aktuelles is in view
+                        const ioToggle = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) document.body.classList.add('scrolled');
+                                else document.body.classList.remove('scrolled');
+                            });
+                        }, { threshold: 0.05 });
+                        ioToggle.observe(aktuellesEl);
+                    }
+
+                // Card expand/collapse behaviour
+                const cards = track.querySelectorAll('.card-vertical');
+                function collapseAll() {
+                    track.classList.remove('expanded');
+                    container.classList.remove('expanded');
+                    cards.forEach(c => c.classList.remove('expanded'));
+                    // restore body scroll
+                    document.body.classList.remove('card-open');
+                }
+
+                // Highlight center/side/far cards while scrolling
+                let centerScheduled = false;
+                function updateCenterClasses() {
+                    centerScheduled = false;
+                    const vRect = viewport.getBoundingClientRect();
+                    const centerX = vRect.left + vRect.width / 2;
+                    let min = Infinity; let centerIdx = -1;
+                    cards.forEach((c, i) => {
+                        const r = c.getBoundingClientRect();
+                        const cX = r.left + r.width / 2;
+                        const d = Math.abs(cX - centerX);
+                        if (d < min) { min = d; centerIdx = i; }
+                    });
+                    cards.forEach((c, i) => {
+                        c.classList.remove('center','side','far');
+                        if (i === centerIdx) c.classList.add('center');
+                        else if (i === centerIdx - 1 || i === centerIdx + 1) c.classList.add('side');
+                        else c.classList.add('far');
+                    });
+                }
+                viewport.addEventListener('scroll', () => {
+                    if (!centerScheduled) { centerScheduled = true; requestAnimationFrame(updateCenterClasses); }
+                });
+                window.addEventListener('resize', () => { if (!centerScheduled) { centerScheduled = true; requestAnimationFrame(updateCenterClasses); } });
+                // initial
+                requestAnimationFrame(() => { updateCenterClasses(); updateTrackPadding(); });
+                window.addEventListener('resize', () => { updateTrackPadding(); });
+
+                const closeBtn = container.querySelector('.cards-close');
+                if (closeBtn) closeBtn.addEventListener('click', (e) => { e.preventDefault(); collapseAll(); });
+
+                cards.forEach(card => {
+                    function toggle(e) {
+                        const isExpanded = card.classList.contains('expanded');
+                        if (isExpanded) {
+                            collapseAll();
+                        } else {
+                                // expand this card by creating a fixed overlay (clone) so layout doesn't shift
+                                // hide the track contents via class so originals don't show beneath overlay
+                                track.classList.add('expanded');
+                                container.classList.add('expanded');
+
+                                // build overlay
+                                const overlay = document.createElement('div');
+                                overlay.className = 'card-overlay';
+                                overlay.setAttribute('role', 'dialog');
+                                overlay.setAttribute('aria-modal', 'true');
+
+                                const overlayInner = document.createElement('div');
+                                overlayInner.className = 'overlay-content';
+
+                                // clone image and body content from the card
+                                const img = card.querySelector('img');
+                                const imgClone = img ? img.cloneNode(true) : document.createElement('img');
+                                if (!imgClone.src && img && img.getAttribute('src')) imgClone.src = img.getAttribute('src');
+
+                                const bodyClone = document.createElement('div');
+                                bodyClone.className = 'card-body';
+                                const bodyContent = card.querySelector('.card-body');
+                                if (bodyContent) bodyClone.innerHTML = bodyContent.innerHTML;
+
+                                overlayInner.appendChild(imgClone);
+                                overlayInner.appendChild(bodyClone);
+                                overlay.appendChild(overlayInner);
+
+                                // remove 'Mehr' button from overlay to avoid duplicate actions
+                                const overlayMoreBtn = overlay.querySelector('.card-more');
+                                if (overlayMoreBtn) overlayMoreBtn.remove();
+
+                                // close button
+                                const overlayClose = document.createElement('button');
+                                overlayClose.className = 'card-close';
+                                overlayClose.setAttribute('aria-label', 'Schließen');
+                                overlayClose.innerText = '✕';
+                                overlay.appendChild(overlayClose);
+
+                                document.body.appendChild(overlay);
+                                // mark the original card so its Mehr button is hidden
+                                card.classList.add('overlay-open');
+                                document.body.classList.add('card-open');
+
+                                // focus management
+                                overlay.setAttribute('tabindex', '-1');
+                                overlay.focus();
+
+                                function removeOverlay() {
+                                    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                                    // restore original card's state
+                                    card.classList.remove('overlay-open');
+                                    collapseAll();
+                                }
+
+                                overlayClose.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); removeOverlay(); });
+                                overlay.addEventListener('click', (ev) => {
+                                    if (ev.target === overlay) removeOverlay();
+                                });
+                                document.addEventListener('keydown', function onKey(ev) {
+                                    if (ev.key === 'Escape') { removeOverlay(); document.removeEventListener('keydown', onKey); }
+                                });
+                        }
+                    }
+
+                    card.addEventListener('click', toggle);
+                    card.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(ev); }
+                        if (ev.key === 'Escape') { collapseAll(); }
+                    });
+
+                    const cClose = card.querySelector('.card-close');
+                    if (cClose) {
+                        cClose.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); collapseAll(); });
+                    }
+                    const moreBtn = card.querySelector('.card-more');
+                    if (moreBtn) {
+                        moreBtn.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); toggle(ev); });
+                    }
+                });
+            });
+        });
     </script>
 
 </body>
