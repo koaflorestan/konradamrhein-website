@@ -360,7 +360,9 @@ button { padding: 10px 14px; border: none; background: #000; color: #fff; cursor
   transition: transform 0.35s ease, opacity 0.35s ease;
   position: relative;
 }
-.card-vertical img { width: 100%; height: 420px; object-fit: cover; display: block; border-radius: 4px; margin-bottom: 8px; }
+.card-vertical img { width: 100%; height: 420px; object-fit: cover; object-position: center; display: block; border-radius: 4px; margin-bottom: 8px; }
+.card-vertical[data-image-position="left"] img { object-position: left; }
+.card-vertical[data-image-position="right"] img { object-position: right; }
 .card-vertical h3 { margin: 8px 0; font-size: 1.05rem; }
 .card-vertical p { margin: 0; color: #333333; font-size: 0.95rem; }
 

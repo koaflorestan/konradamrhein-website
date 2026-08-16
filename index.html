@@ -195,6 +195,9 @@
             const article = document.createElement('article');
             article.className = 'card-vertical';
             article.tabIndex = 0;
+            if (data.imagePosition) {
+                article.setAttribute('data-image-position', data.imagePosition);
+            }
             article.innerHTML = `
                 <button class="card-close" aria-label="Schließen">✕</button>
                 <img src="${data.image}" alt="${data.imageAlt}">

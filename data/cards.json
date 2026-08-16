@@ -1,38 +1,40 @@
 [
   {
-    "title": "Viani forte bei der Jahresausstellung",
-    "description": "Bei der Jahresausstellung der ADBK München habe ich in diesem Jahr Instrumente aus Wäscheständern gebaut.",
-    "image": "images/regentrude.jpg",
-    "imageAlt": "Regentrude"
+    "title": "Viani forte",
+    "description": "Bei der Jahresausstellung der ADBK München habe ich in diesem Jahr Instrumente aus Asthmainhalatoren gebaut.",
+    "image": "images/viani-forte-2.jpg",
+    "imageAlt": "Viani forte"
   },
   {
-    "title": "Regentrude — Projekt B",
-    "description": "Kurzbeschreibung zu Projekt B. Aktuelles, Termine und Infos.",
-    "image": "images/regentrude.jpg",
-    "imageAlt": "Regentrude"
+    "title": "Moderator bei ARD Klassik",
+    "description": "Im November 2025 habe ich bei ARD Klassik als Moderator angefangen.",
+    "image": "images/journalistmus.png",
+    "imageAlt": "Journalist"
   },
   {
-    "title": "Regentrude — Projekt C",
-    "description": "Kurzbeschreibung zu Projekt C. Aktuelles, Termine und Infos.",
-    "image": "images/regentrude.jpg",
-    "imageAlt": "Regentrude"
+    "title": "Bachelorabschluss",
+    "description": "Im September 2025 habe ich nach 4 Jahren Studium mein Regiestudium in Frankfurt abgeschlossen <3",
+    "image": "images/Abschluss.jpg",
+    "imageAlt": "Abschluss"
   },
   {
-    "title": "Regentrude — Projekt D",
-    "description": "Kurzbeschreibung zu Projekt D. Aktuelles, Termine und Infos.",
-    "image": "images/regentrude.jpg",
-    "imageAlt": "Regentrude"
+    "title": "Ein Stück aus der Perspektive eines Feldackers",
+    "description": "Am Staatstheater Wiesbaden habe ich 2025 das Musiktheater feldfuge inszeniert",
+    "image": "images/feldfuge-2.jpg",
+    "imageAlt": "feldfuge"
   },
   {
-    "title": "Regentrude — Projekt E",
-    "description": "Kurzbeschreibung zu Projekt E. Aktuelles, Termine und Infos.",
-    "image": "images/regentrude.jpg",
-    "imageAlt": "Regentrude"
+    "title": "Das KommentarTheater",
+    "description": "Digitale Kommentarspalten zu analogem Theater",
+    "image": "images/kommentartheater-2.jpg",
+    "imageAlt": "kommentartheater",
+    "imagePosition": "left"
   },
   {
-    "title": "Regentrude — Projekt F",
-    "description": "Kurzbeschreibung zu Projekt F. Aktuelles, Termine und Infos.",
-    "image": "images/regentrude.jpg",
-    "imageAlt": "Regentrude"
+    "title": "Regentrude",
+    "description": "Im Oktober 2024 habe ich an der HfMDK Frankfurt ein Musiktheater aus Theodor Storms Kunstmärchen gemacht.",
+    "image": "images/regentrude-2.jpg",
+    "imageAlt": "Regentrude",
+    "imagePosition": "center"
   }
 ]
