@@ -191,40 +191,41 @@
 
     <script>
         // ============ Cards Data & Template ============
-        const CARDS_DATA = [
-            { title: 'Regentrude — Projekt A', desc: 'Kurzbeschreibung zu Projekt A. Aktuelles, Termine und Infos.' },
-            { title: 'Regentrude — Projekt B', desc: 'Kurzbeschreibung zu Projekt B. Aktuelles, Termine und Infos.' },
-            { title: 'Regentrude — Projekt C', desc: 'Kurzbeschreibung zu Projekt C. Aktuelles, Termine und Infos.' },
-            { title: 'Regentrude — Projekt D', desc: 'Kurzbeschreibung zu Projekt D. Aktuelles, Termine und Infos.' },
-            { title: 'Regentrude — Projekt E', desc: 'Kurzbeschreibung zu Projekt E. Aktuelles, Termine und Infos.' },
-            { title: 'Regentrude — Projekt F', desc: 'Kurzbeschreibung zu Projekt F. Aktuelles, Termine und Infos.' }
-        ];
-
         function createCardElement(data) {
             const article = document.createElement('article');
             article.className = 'card-vertical';
             article.tabIndex = 0;
             article.innerHTML = `
                 <button class="card-close" aria-label="Schließen">✕</button>
-                <img src="images/regentrude.jpg" alt="${data.title}">
+                <img src="${data.image}" alt="${data.imageAlt}">
                 <div class="card-body">
                     <h3>${data.title}</h3>
-                    <p>${data.desc}</p>
+                    <p>${data.description}</p>
                     <div class="card-actions"><button class="card-more">Mehr</button></div>
                 </div>
             `;
             return article;
         }
 
-        function renderCards(track) {
+        function renderCards(track, cardsData) {
             track.innerHTML = '';
-            CARDS_DATA.forEach(data => track.appendChild(createCardElement(data)));
+            cardsData.forEach(data => track.appendChild(createCardElement(data)));
         }
 
         // ============ Cards Functionality ============
         document.addEventListener('DOMContentLoaded', () => {
             const cardsTrack = document.getElementById('cardsTrack');
-            if (cardsTrack) renderCards(cardsTrack);
+            
+            // Load cards data from JSON
+            fetch('data/cards.json')
+                .then(r => r.json())
+                .then(cardsData => {
+                    if (cardsTrack) renderCards(cardsTrack, cardsData);
+                    initializeCardHandlers();
+                })
+                .catch(err => console.error('Fehler beim Laden der Karten:', err));
+
+            function initializeCardHandlers() {
 
             const container = document.querySelector('.cards-container');
             const viewport = container.querySelector('.cards-viewport');
@@ -419,6 +420,7 @@
                     toggleCardExpand(card);
                 });
             });
+            }
         });
     </script>
 
