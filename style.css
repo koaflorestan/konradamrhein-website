@@ -10,6 +10,29 @@ body {
   scrollbar-gutter: stable;
 }
 
+body.maintenance-mode {
+  min-height: 100vh;
+  padding: 0;
+  overflow: hidden;
+  background: #ffffff;
+  color: #000000;
+}
+
+body.maintenance-mode > :not(.maintenance-screen) {
+  display: none !important;
+}
+
+.maintenance-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #ffffff;
+  color: #000000;
+  text-align: center;
+}
+
 /* On the home page we show the slideshow behind content, so make body transparent */
 body.home {
   position: relative;
